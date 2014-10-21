@@ -1,0 +1,4 @@
+*** WooCommerce Sales By Location Report Changelog ***
+
+2014.10.15 - version 1.0
+* Initial Release
