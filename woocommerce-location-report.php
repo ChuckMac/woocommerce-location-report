@@ -24,8 +24,8 @@
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 // Check if WooCommerce is active
-if ( ! is_woocommerce_active() ) {
-	return;
+if ( ! in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
+    return;
 }
 
 

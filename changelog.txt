@@ -1,4 +1,7 @@
 *** WooCommerce Sales By Location Report Changelog ***
 
+2014.XX.XX - version 1.1
+* Fix - WooCommerce active check
+
 2014.10.15 - version 1.0
 * Initial Release
