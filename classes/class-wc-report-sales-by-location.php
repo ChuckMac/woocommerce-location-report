@@ -51,13 +51,13 @@ class WC_Report_Sales_By_Location extends WC_Admin_Report {
 		$country_data = array();
 		foreach ( $location_query as $location_values ) {
 
-			if ( $location_values->countries_data == '' ) {
+			if ( '' == $location_values->countries_data ) {
 				$location_values->countries_data = 'UNDEFINED';
 			}
 
-			if ( $this->totals_by == 'number-orders' ) {
+			if ( 'number-orders' == $this->totals_by ) {
 				$country_data[$location_values->countries_data] = $location_values->countries_data_count;
-			} elseif ( $this->totals_by == 'order-total' ) {
+			} elseif ( 'order-total' == $this->totals_by ) {
 				$country_data[$location_values->countries_data] = $location_values->total_sales;
 			}
 		}
@@ -67,7 +67,7 @@ class WC_Report_Sales_By_Location extends WC_Admin_Report {
 		wp_localize_script('jvectormap', 'map_data', $this->location_data);
 
 		//If we are using price, then create another set of data with the price set (map does not like adding with price)
-		if ( $this->totals_by == 'order-total' ) {
+		if ( 'order-total' == $this->totals_by ) {
 			$sales_data = $this->location_data;
 			array_walk($sales_data, function(&$value, $index){
 				$value = strip_tags( wc_price( $value ));
@@ -84,7 +84,7 @@ class WC_Report_Sales_By_Location extends WC_Admin_Report {
 
 		$total = array_sum( $country_data );
 
-		if ( $this->totals_by == 'order-total' ) {
+		if ( 'order-total' == $this->totals_by ) {
 			$total = wc_price( $total );
 		}
 
@@ -238,7 +238,7 @@ class WC_Report_Sales_By_Location extends WC_Admin_Report {
 					},
             		onRegionLabelShow: function(e, el, code) {
             			<?php
-            			if ( isset($_REQUEST['report_by']) && $_REQUEST['report_by'] == 'order-total' ) { // show formatted price for order totals ?>
+            			if ( isset($_REQUEST['report_by']) && 'order-total' == $_REQUEST['report_by'] ) { // show formatted price for order totals ?>
               				el.html('<strong>'+(map_price_data[code] ? map_price_data[code] : 0)+' <?php _e('orders', 'woocommerce-location-report'); ?> - '+'</strong> '+el.html());
               			<?php
               			} else { ?>
