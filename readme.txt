@@ -3,7 +3,7 @@ Contributors: chuckmac
 Tags: woocommerce, extension, reporting, analytics
 Requires at least: 3.8
 Tested up to: 4.0
-Stable tag: 1.0
+Stable tag: 1.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -50,6 +50,10 @@ The location map only displays orders that have a recognizable address associate
 
 
 == Changelog ==
+= 1.1 - 2014/11/20
+* Fix - WooCommerce active check
+* Tweak - yoda coding style
+* Enhancement - Export functionality in report
 
 = 1.0.0 - 10/15/2014 =
 * Initial Release (!)
