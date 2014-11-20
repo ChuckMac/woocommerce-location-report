@@ -50,7 +50,7 @@ The location map only displays orders that have a recognizable address associate
 
 
 == Changelog ==
-= 1.1 - 2014/11/20
+= 1.1 - 2014/11/20 =
 * Fix - WooCommerce active check
 * Tweak - yoda coding style
 * Enhancement - Export functionality in report
