@@ -5,7 +5,7 @@
  * Description: WooCommerce report to visualize sales by location.
  * Author: Chuck Mac
  * Author URI: http://www.chuckmac.info
- * Version: 1.0.0
+ * Version: 1.1
  * Text Domain: wc_location_report
  * Domain Path: /languages/
  *
@@ -44,7 +44,7 @@ if ( ! in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins',
 class WC_Location_Report {
 
 	/** plugin version number */
-	public static $version = '1.0.0';
+	public static $version = '1.1';
 
 	/** @var string the plugin file */
 	public static $plugin_file = __FILE__;

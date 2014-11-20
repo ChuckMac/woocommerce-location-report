@@ -5,7 +5,7 @@
  * @author      ChuckMac (chuck@chuckmac.info)
  * @category    Admin
  * @package     WooCommerce/Admin/Reports
- * @version     1.0.0
+ * @version     1.1
  */
 
 class WC_Report_Sales_By_Location extends WC_Admin_Report {
@@ -41,14 +41,21 @@ class WC_Report_Sales_By_Location extends WC_Admin_Report {
 						'function' => 'SUM',
 						'name'     => 'total_sales'
 					),
+					'post_date' => array(
+						'type'     => 'post_data',
+						'function' => '',
+						'name'     => 'post_date'
+					),
 				),
 				'filter_range' => true,
-				'group_by' => 'meta__' . $this->location_by . '_country.meta_value',
+				'group_by' => 'YEAR(posts.post_date), MONTH(posts.post_date), DAY(posts.post_date), meta__' . $this->location_by . '_country.meta_value',
 				'query_type' => 'get_results'
 			) );
 
+
 		//Loop through the returned data and set depending on sales or order totals
 		$country_data = array();
+		$export_data = array();
 		foreach ( $location_query as $location_values ) {
 
 			if ( '' == $location_values->countries_data ) {
@@ -56,9 +63,13 @@ class WC_Report_Sales_By_Location extends WC_Admin_Report {
 			}
 
 			if ( 'number-orders' == $this->totals_by ) {
-				$country_data[$location_values->countries_data] = $location_values->countries_data_count;
+				$country_data[$location_values->countries_data] = ( isset( $country_data[$location_values->countries_data] ) ) ? $location_values->countries_data_count + $country_data[$location_values->countries_data] : $location_values->countries_data_count;
 			} elseif ( 'order-total' == $this->totals_by ) {
-				$country_data[$location_values->countries_data] = $location_values->total_sales;
+				$country_data[$location_values->countries_data] = ( isset( $country_data[$location_values->countries_data] ) ) ? $location_values->total_sales + $country_data[$location_values->countries_data] : $location_values->total_sales;
+			}
+
+			if ( 'UNDEFINED' != $location_values->countries_data ) {
+				$export_data[$location_values->countries_data][] = $location_values;
 			}
 		}
 
@@ -99,6 +110,46 @@ class WC_Report_Sales_By_Location extends WC_Admin_Report {
 			'color' => $this->chart_colours['individual_total'],
 			'highlight_series' => 2
 		);
+
+		/* Export Code */
+		$export_array = array();
+		$report_type = ( 'number-orders' == $this->totals_by ) ? 'countries_data_count' : 'total_sales';
+		foreach ($export_data as $country => $data) {
+			$export_prep = $this->prepare_chart_data( $data, 'post_date', $report_type, $this->chart_interval, $this->start_date, $this->chart_groupby );
+			$export_array[$country] = array_values( $export_prep );
+		}
+
+		// Encode in json format
+		$chart_data = json_encode( $export_array );
+
+		?>
+		<div class="chart-container" style="display:none !important;">
+			<div class="chart-placeholder main" style="display:none !important;"></div>
+		</div>
+		<script type="text/javascript">
+			var main_chart;
+
+			jQuery(function(){
+				var order_data = jQuery.parseJSON( '<?php echo $chart_data; ?>' );
+
+				var series = [
+					<?php
+					foreach ( $export_array as $country => $data ) {
+						echo "{\n     label: \"$country\",\n     data: order_data.$country\n },";
+					}
+					?>
+				];
+
+				main_chart = jQuery.plot(
+						jQuery('.chart-placeholder.main'),
+						series
+						);
+			});
+
+		</script>
+		<?php
+
+		/* / Export Code */
 
 		return $legend;
 	}
@@ -215,7 +266,19 @@ class WC_Report_Sales_By_Location extends WC_Admin_Report {
 	 * @since 1.0
 	 */
 	public function get_export_button() {
-
+		$current_range = ! empty( $_GET['range'] ) ? sanitize_text_field( $_GET['range'] ) : '7day';
+		?>
+		<a
+			href="#"
+			download="report-<?php echo esc_attr( $current_range ); ?>-<?php echo date_i18n( 'Y-m-d', current_time('timestamp') ); ?>.csv"
+			class="export_csv"
+			data-export="chart"
+			data-xaxes="<?php _e( 'Date', 'woocommerce' ); ?>"
+			data-groupby="<?php echo $this->chart_groupby; ?>"
+		>
+			<?php _e( 'Export CSV', 'woocommerce' ); ?>
+		</a>
+		<?php
 	}
 
 	/**
