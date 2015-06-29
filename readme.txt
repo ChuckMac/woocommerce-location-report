@@ -2,7 +2,7 @@
 Contributors: chuckmac
 Tags: woocommerce, extension, reporting, analytics
 Requires at least: 3.8
-Tested up to: 4.0
+Tested up to: 4.2
 Stable tag: 1.0
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -35,7 +35,7 @@ The location map only displays orders that have a recognizable address associate
 = Minimum Requirements =
 
 * WordPress 3.8 or greater
-* WooCommerce 2.2 or greater
+* WooCommerce 2.3 or greater
 
 = Instructions =
 
@@ -50,6 +50,10 @@ The location map only displays orders that have a recognizable address associate
 
 
 == Changelog ==
+
+= 1.2 - 2015.06.29 =
+* Enhancement - Update to jVectorMap 2.0.2
+* Fix - Fix order total reporting issue with WooCommerce 2.3
 
 = 1.1.1 - 2015.01.11 =
 * Fix - add .js suffix to world map 
