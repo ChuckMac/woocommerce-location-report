@@ -146,6 +146,7 @@ class WC_Report_Sales_By_Location extends WC_Admin_Report {
 		$this->location_data = $country_data;
 		wp_localize_script('jvectormap', 'map_data', $this->location_data);
 
+
 		//If we are using price, then create another set of data with the price set (map does not like adding with price)
 		if ( 'order-total' == $this->totals_by ) {
 			$sales_data = $this->location_data;
@@ -361,32 +362,32 @@ class WC_Report_Sales_By_Location extends WC_Admin_Report {
 
 		<div class="jvectormap jvectormap-mill" id="world-map" style="height: 500px;">
 		<script type="text/javascript">
- 			jQuery(function($){
- 				$('#world-map').vectorMap( {
- 					map: 'world_mill_en',
- 					backgroundColor: "transparent",
- 					regionStyle: {
-		    			initial:  {	fill: "#d2d2d2"}
+			jQuery(function($){
+				$('#world-map').vectorMap( {
+					map: 'world_mill_en',
+					backgroundColor: "transparent",
+					regionStyle: {
+						initial:  {	fill: "#d2d2d2"}
 					},
-            		onRegionLabelShow: function(e, el, code) {
-            			<?php
-            			if ( isset($_REQUEST['report_by']) && 'order-total' == $_REQUEST['report_by'] ) { // show formatted price for order totals ?>
-              				el.html('<strong>'+(map_price_data[code] ? map_price_data[code] : 0)+' <?php _e('orders', 'woocommerce-location-report'); ?> - '+'</strong> '+el.html());
-              			<?php
-              			} else { ?>
-              				el.html('<strong>'+(map_data[code] ? map_data[code] : 0)+' <?php _e('orders', 'woocommerce-location-report'); ?> - '+'</strong> '+el.html());
-              			<?php
-              			} ?>
-            		},
-           			series: {
-           			  regions: [{
-           			  	values: map_data,
-           			    scale: ['#F0C7E8', '#A46497'],
-           			    normalizeFunction: 'polynomial'
-           			  }]
-           			},
- 				});
- 			});
+					onRegionTipShow: function(e, el, code) {
+						<?php
+						if ( isset($_REQUEST['report_by']) && 'order-total' == $_REQUEST['report_by'] ) { // show formatted price for order totals ?>
+							el.html('<strong>'+(map_price_data[code] ? map_price_data[code] : 0)+' - </strong> '+el.html());
+						<?php
+						} else { ?>
+							el.html('<strong>'+(map_data[code] ? map_data[code] : 0)+' <?php _e('orders', 'woocommerce-location-report'); ?> - '+'</strong> '+el.html());
+						<?php
+						} ?>
+					},
+						series: {
+						  regions: [{
+						values: map_data,
+						scale: ['#F0C7E8', '#A46497'],
+						normalizeFunction: 'polynomial'
+						  }]
+						},
+				});
+			});
 		</script>
 
 		<?php
