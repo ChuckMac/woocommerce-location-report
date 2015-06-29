@@ -277,62 +277,37 @@ class WC_Report_Sales_By_Location extends WC_Admin_Report {
 		<h4 class="section_title"><span><?php _e( 'Report By', 'woocommerce' ); ?></span></h4>
 		<div class="section">
 			<table cellspacing="0">
-				<tr class="active">
-					<td class="count"></td>
-					<td class="name">
-						<?php 
-						if ( 'number-orders' != $this->totals_by ) {
-							echo '<a href="' . add_query_arg( 'report_by', 'number-orders' ) . '">' . __( 'Number of orders', 'woocommerce-location-report' ) . '</a>';
-						} else {
-							_e( 'Number of orders', 'woocommerce-location-report' );
-						} ?>
-					</td>
-					<td class="sparkline"></td>
-				</tr>
-				<tr class="active">
-					<td class="count"></td>
-					<td class="name">
-						<?php 
-						if ( 'order-total' != $this->totals_by ) {
-							echo '<a href="' . add_query_arg( 'report_by', 'order-total' ) . '">' . __( 'Order total', 'woocommerce-location-report' ) . '</a>';
-						} else {
-							_e( 'Order total', 'woocommerce-location-report' );
-						} ?>
-					</td>
-					<td class="sparkline"></td>
-				</tr>
+				<?php echo $this->generate_widget_line( 'report_by', 'number-orders', __( 'Number of orders', 'woocommerce-location-report' ), $this->totals_by ); ?>
+				<?php echo $this->generate_widget_line( 'report_by', 'order-total', __( 'Order total', 'woocommerce-location-report' ), $this->totals_by ); ?>
 			</table>
 		</div>
 		<h4 class="section_title"><span><?php _e( 'Location Filter', 'woocommerce' ); ?></span></h4>
 		<div class="section">
 			<table cellspacing="0">
-				<tr class="active">
-					<td class="count"></td>
-					<td class="name">
-						<?php 
-						if ( 'shipping' != $this->location_by ) {
-							echo '<a href="' . add_query_arg( 'location_filter', 'shipping' ) . '">' . __( 'Shipping Address', 'woocommerce-location-report' ) . '</a>';
-						} else {
-							_e( 'Shipping Address', 'woocommerce-location-report' );
-						} ?>
-					</td>
-					<td class="sparkline"></td>
-				</tr>
-				<tr class="active">
-					<td class="count"></td>
-					<td class="name">
-						<?php 
-						if ( 'billing' != $this->location_by ) {
-							echo '<a href="' . add_query_arg( 'location_filter', 'billing' ) . '">' . __( 'Billing Address', 'woocommerce-location-report' ) . '</a>';
-						} else {
-							_e( 'Billing Address', 'woocommerce-location-report' );
-						} ?>
-					</td>
-					<td class="sparkline"></td>
-				</tr>
+				<?php echo $this->generate_widget_line( 'location_filter', 'shipping', __( 'Shipping Address', 'woocommerce-location-report' ), $this->location_by ); ?>
+				<?php echo $this->generate_widget_line( 'location_filter', 'billing', __( 'Billing Address', 'woocommerce-location-report' ), $this->location_by ); ?>
 			</table>
 		</div>
 		<?php
+	}
+
+	/**
+	 * Widget : Report filter options
+	 *
+	 * @since 1.0
+	 */
+	public function generate_widget_line( $query_type, $query_value, $query_name, $current_val ) {
+
+		$return = '<tr class="active"><td class="count"></td><td class="name">';
+		if ( $query_value != $current_val ) {
+			$return .= '<a href="' . add_query_arg( $query_type, $query_value ) . '">' . $query_name . '</a>';
+		} else {
+			$return .= $query_name;
+		}
+		$return .= '</td><td class="sparkline"></td></tr>';
+
+		return $return;
+
 	}
 
 	/**
