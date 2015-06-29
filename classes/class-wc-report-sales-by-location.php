@@ -122,9 +122,7 @@ class WC_Report_Sales_By_Location extends WC_Admin_Report {
 			
 				$country_data[$location_values->countries_data] = ( isset( $country_data[$location_values->countries_data] ) ) ? $location_values->count + $country_data[$location_values->countries_data] : $location_values->count;
 
-				if ( 'UNDEFINED' != $location_values->countries_data ) {
-					$export_data[$location_values->countries_data][] = $location_values;
-				}
+				$export_data[$location_values->countries_data][] = $location_values;
 			}
 		} elseif ( 'order-total' == $this->totals_by ) {
 			foreach ( $data->orders as $location_values ) {
@@ -135,12 +133,9 @@ class WC_Report_Sales_By_Location extends WC_Admin_Report {
 					
 				$country_data[$location_values->countries_data] = ( isset( $country_data[$location_values->countries_data] ) ) ? $location_values->total_sales + $country_data[$location_values->countries_data] : $location_values->total_sales;
 	
-				if ( 'UNDEFINED' != $location_values->countries_data ) {
-					$export_data[$location_values->countries_data][] = $location_values;
-				}
+				$export_data[$location_values->countries_data][] = $location_values;
 			}
 		}
-
 
 		//Pass the data to the screen.
 		$this->location_data = $country_data;
@@ -158,11 +153,6 @@ class WC_Report_Sales_By_Location extends WC_Admin_Report {
 
 		$legend = array();
 
-		// Remove data with no value
-		if( isset( $country_data['UNDEFINED'] ) ) {
-			unset( $country_data['UNDEFINED'] );
-		}
-
 		$total = array_sum( $country_data );
 
 		if ( 'order-total' == $this->totals_by ) {
@@ -176,17 +166,27 @@ class WC_Report_Sales_By_Location extends WC_Admin_Report {
 		);
 
 		$legend[] = array(
-			'title' => sprintf( __( '%s countries in this period', 'woocommerce-location-report' ), '<strong>' . count( $country_data ) . '</strong>' ),
+			'title' => sprintf( __( '%s countries in this period', 'woocommerce-location-report' ), '<strong>' . ( isset( $country_data['UNDEFINED'] ) ? count( $country_data ) - 1 :count( $country_data ) ) . '</strong>' ),
 			'color' => $this->chart_colours['individual_total'],
 			'highlight_series' => 2
 		);
 
 		/* Export Code */
 		$export_array = array();
-		$report_type = ( 'number-orders' == $this->totals_by ) ? 'countries_data_count' : 'total_sales';
+		$report_type = ( 'number-orders' == $this->totals_by ) ? 'count' : 'total_sales';
+
 		foreach ($export_data as $country => $data) {
+
 			$export_prep = $this->prepare_chart_data( $data, 'post_date', $report_type, $this->chart_interval, $this->start_date, $this->chart_groupby );
+
 			$export_array[$country] = array_values( $export_prep );
+		}
+
+		// Move undefined to the end of the data
+		if ( isset( $export_array['UNDEFINED'] ) ) {
+			$temp = $export_array['UNDEFINED'];
+			unset($export_array['UNDEFINED']);
+			$export_array['UNDEFINED'] = $temp;
 		}
 
 		// Encode in json format
