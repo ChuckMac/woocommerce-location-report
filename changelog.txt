@@ -1,6 +1,7 @@
 *** WooCommerce Sales By Location Report Changelog ***
 
 2015.XX.XX - Version 1.2
+* Enhancement - Update to jVectorMap 2.0.2
 * Fix - Fix order total reporting issue with WooCommerce 2.3
 
 2015.01.11 - Version 1.1.1

@@ -93,11 +93,11 @@ class WC_Location_Report {
 		if ( in_array( $screen->id, apply_filters( 'woocommerce_geo_reports_screen_ids', array( $wc_screen_id . '_page_wc-reports' ) ) ) && isset( $_REQUEST['report'] ) && in_array($_REQUEST['report'], apply_filters( 'woocommerce_geo_reports_report_ids', array( 'sales_by_location' ) )) ) {
 
 			//jVector includes - needs to be done in the footer so we can localize data as part of the report generation
-			wp_enqueue_script( 'jvectormap', plugins_url( '/lib/jquery-jvectormap-1.2.2.min.js', self::$plugin_file ), array( 'jquery' ), self::$version, true );
-			wp_enqueue_script( 'jvectormap-world', plugins_url( '/lib/map-data/jquery-jvectormap-world-mill-en', self::$plugin_file ), array( 'jquery', 'jvectormap' ), self::$version, true );
+			wp_enqueue_script( 'jvectormap', plugins_url( '/lib/jquery-jvectormap-2.0.2.min.js', self::$plugin_file ), array( 'jquery' ), self::$version, true );
+			wp_enqueue_script( 'jvectormap-world', plugins_url( '/lib/map-data/jquery-jvectormap-world-mill-en.js', self::$plugin_file ), array( 'jquery', 'jvectormap' ), self::$version, true );
 
 			//jVector css
-			wp_enqueue_style( 'jvectormap', plugins_url( '/lib/jquery-jvectormap-1.2.2.css', self::$plugin_file ), array( 'woocommerce_admin_styles' ), self::$version );
+			wp_enqueue_style( 'jvectormap', plugins_url( '/lib/jquery-jvectormap-2.0.2.css', self::$plugin_file ), array( 'woocommerce_admin_styles' ), self::$version );
 
 		}
 
