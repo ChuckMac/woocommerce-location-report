@@ -12,7 +12,7 @@ The report visualizes the customer purchases by location into a Choropleth map t
 ## Minimum Requirements
 
 * WordPress 3.8 or greater
-* WooCommerce 2.2 or greater
+* WooCommerce 2.3 or greater
 
 ## Installation Instructions
 
