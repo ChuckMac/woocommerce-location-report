@@ -124,6 +124,9 @@ class WC_Report_Sales_By_Location extends WC_Admin_Report {
 
 				$export_data[$location_values->countries_data][] = $location_values;
 			}
+
+			$placeholder = __( 'This is the count of orders during this period.', 'woocommerce-location-report' );
+
 		} elseif ( 'order-total' == $this->totals_by ) {
 			foreach ( $data->orders as $location_values ) {
 	
@@ -135,6 +138,9 @@ class WC_Report_Sales_By_Location extends WC_Admin_Report {
 	
 				$export_data[$location_values->countries_data][] = $location_values;
 			}
+
+			$placeholder = __( 'This is the sum of the order totals after any refunds and including shipping and taxes.', 'woocommerce-location-report' );
+
 		}
 
 		//Pass the data to the screen.
@@ -161,12 +167,14 @@ class WC_Report_Sales_By_Location extends WC_Admin_Report {
 
 		$legend[] = array(
 			'title' => sprintf( __( '%s orders in this period', 'woocommerce-location-report' ), '<strong>' . $total . '</strong>' ),
+			'placeholder' => $placeholder,
 			'color' => $this->chart_colours['order_total'],
 			'highlight_series' => 1
 		);
 
 		$legend[] = array(
 			'title' => sprintf( __( '%s countries in this period', 'woocommerce-location-report' ), '<strong>' . ( isset( $country_data['UNDEFINED'] ) ? count( $country_data ) - 1 :count( $country_data ) ) . '</strong>' ),
+			'placeholder' => __( 'This is the total number of countries represented in this report.', 'woocommerce-location-report' ),
 			'color' => $this->chart_colours['individual_total'],
 			'highlight_series' => 2
 		);
