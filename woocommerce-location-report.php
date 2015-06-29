@@ -5,11 +5,11 @@
  * Description: WooCommerce report to visualize sales by location.
  * Author: Chuck Mac
  * Author URI: http://www.chuckmac.info
- * Version: 1.1
+ * Version: 1.2
  * Text Domain: wc_location_report
  * Domain Path: /languages/
  *
- * Copyright: (c) 2014 ChuckMac Development LLC
+ * Copyright: (c) 2014-2015 ChuckMac Development LLC
  *
  * License: GNU General Public License v3.0
  * License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -17,7 +17,7 @@
  * @package   WC-Location-Report
  * @author    WooThemes
  * @category  Reports
- * @copyright Copyright (c) 2014, ChuckMac Development LLC
+ * @copyright Copyright (c) 2014-2015, ChuckMac Development LLC
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
@@ -44,7 +44,7 @@ if ( ! in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins',
 class WC_Location_Report {
 
 	/** plugin version number */
-	public static $version = '1.1';
+	public static $version = '1.2';
 
 	/** @var string the plugin file */
 	public static $plugin_file = __FILE__;
@@ -94,7 +94,7 @@ class WC_Location_Report {
 
 			//jVector includes - needs to be done in the footer so we can localize data as part of the report generation
 			wp_enqueue_script( 'jvectormap', plugins_url( '/lib/jquery-jvectormap-1.2.2.min.js', self::$plugin_file ), array( 'jquery' ), self::$version, true );
-			wp_enqueue_script( 'jvectormap-world', plugins_url( '/lib/map-data/jquery-jvectormap-world-mill-en.js', self::$plugin_file ), array( 'jquery', 'jvectormap' ), self::$version, true );
+			wp_enqueue_script( 'jvectormap-world', plugins_url( '/lib/map-data/jquery-jvectormap-world-mill-en', self::$plugin_file ), array( 'jquery', 'jvectormap' ), self::$version, true );
 
 			//jVector css
 			wp_enqueue_style( 'jvectormap', plugins_url( '/lib/jquery-jvectormap-1.2.2.css', self::$plugin_file ), array( 'woocommerce_admin_styles' ), self::$version );
