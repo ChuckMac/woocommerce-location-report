@@ -279,12 +279,26 @@ class WC_Report_Sales_By_Location extends WC_Admin_Report {
 			<table cellspacing="0">
 				<tr class="active">
 					<td class="count"></td>
-					<td class="name"><a href="<?php echo add_query_arg( 'report_by', 'number-orders' ); ?>"><?php _e( 'Number of orders', 'woocommerce-location-report' ); ?></a></td>
+					<td class="name">
+						<?php 
+						if ( 'number-orders' != $this->totals_by ) {
+							echo '<a href="' . add_query_arg( 'report_by', 'number-orders' ) . '">' . __( 'Number of orders', 'woocommerce-location-report' ) . '</a>';
+						} else {
+							_e( 'Number of orders', 'woocommerce-location-report' );
+						} ?>
+					</td>
 					<td class="sparkline"></td>
 				</tr>
 				<tr class="active">
 					<td class="count"></td>
-					<td class="name"><a href="<?php echo add_query_arg( 'report_by', 'order-total' ); ?>"><?php _e( 'Order total', 'woocommerce-location-report' ); ?></a></td>
+					<td class="name">
+						<?php 
+						if ( 'order-total' != $this->totals_by ) {
+							echo '<a href="' . add_query_arg( 'report_by', 'order-total' ) . '">' . __( 'Order total', 'woocommerce-location-report' ) . '</a>';
+						} else {
+							_e( 'Order total', 'woocommerce-location-report' );
+						} ?>
+					</td>
 					<td class="sparkline"></td>
 				</tr>
 			</table>
@@ -294,12 +308,26 @@ class WC_Report_Sales_By_Location extends WC_Admin_Report {
 			<table cellspacing="0">
 				<tr class="active">
 					<td class="count"></td>
-					<td class="name"><a href="<?php echo add_query_arg( 'location_filter', 'shipping' ); ?>"><?php _e( 'Shipping Address', 'woocommerce-location-report' ); ?></a></td>
+					<td class="name">
+						<?php 
+						if ( 'shipping' != $this->location_by ) {
+							echo '<a href="' . add_query_arg( 'location_filter', 'shipping' ) . '">' . __( 'Shipping Address', 'woocommerce-location-report' ) . '</a>';
+						} else {
+							_e( 'Shipping Address', 'woocommerce-location-report' );
+						} ?>
+					</td>
 					<td class="sparkline"></td>
 				</tr>
 				<tr class="active">
 					<td class="count"></td>
-					<td class="name"><a href="<?php echo add_query_arg( 'location_filter', 'billing' ); ?>"><?php _e( 'Billing Address', 'woocommerce-location-report' ); ?></a></td>
+					<td class="name">
+						<?php 
+						if ( 'billing' != $this->location_by ) {
+							echo '<a href="' . add_query_arg( 'location_filter', 'billing' ) . '">' . __( 'Billing Address', 'woocommerce-location-report' ) . '</a>';
+						} else {
+							_e( 'Billing Address', 'woocommerce-location-report' );
+						} ?>
+					</td>
 					<td class="sparkline"></td>
 				</tr>
 			</table>
