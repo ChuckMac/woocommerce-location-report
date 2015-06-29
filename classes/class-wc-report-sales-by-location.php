@@ -16,6 +16,83 @@ class WC_Report_Sales_By_Location extends WC_Admin_Report {
 	public $location_by;
 	public $totals_by;
 
+	private $report_data;
+
+
+	/**
+	 * Get report data
+	 * @return array
+	 */
+	public function get_report_data() {
+		if ( empty( $this->report_data ) ) {
+			$this->query_report_data();
+		}
+		return $this->report_data;
+	}
+
+	/**
+	 * Get all data needed for this report and store in the class
+	 */
+	private function query_report_data() {
+
+		$this->report_data = new stdClass;
+
+		$this->report_data->orders = (array) $this->get_order_report_data( array(
+			'data' => array(
+				'_' . $this->location_by . '_country' => array(
+					'type'     => 'meta',
+					'name'     => 'countries_data',
+					'function' => null
+				),
+				'_order_total' => array(
+					'type'     => 'meta',
+					'function' => 'SUM',
+					'name'     => 'total_sales'
+				),
+				'post_date' => array(
+					'type'     => 'post_data',
+					'function' => '',
+					'name'     => 'post_date'
+				),
+			),
+			'group_by'            => 'YEAR(posts.post_date), MONTH(posts.post_date), DAY(posts.post_date), meta__' . $this->location_by . '_country.meta_value',
+			'order_by'            => 'post_date ASC',
+			'query_type'          => 'get_results',
+			'filter_range'        => true,
+			'order_types'         => array_merge( array( 'shop_order_refund' ), wc_get_order_types( 'sales-reports' ) ),
+			'order_status'        => array( 'completed', 'processing', 'on-hold' ),
+			'parent_order_status' => array( 'completed', 'processing', 'on-hold' ),
+		) );
+
+		$this->report_data->order_counts = (array) $this->get_order_report_data( array(
+			'data' => array(
+				'_' . $this->location_by . '_country' => array(
+					'type'     => 'meta',
+					'name'     => 'countries_data',
+					'function' => null
+				),
+				'ID' => array(
+					'type'     => 'post_data',
+					'function' => 'COUNT',
+					'name'     => 'count',
+					'distinct' => true,
+				),
+				'post_date' => array(
+					'type'     => 'post_data',
+					'function' => '',
+					'name'     => 'post_date'
+				)
+			),
+			'group_by'            => 'YEAR(posts.post_date), MONTH(posts.post_date), DAY(posts.post_date), meta__' . $this->location_by . '_country.meta_value',
+			'order_by'            => 'post_date ASC',
+			'query_type'          => 'get_results',
+			'filter_range'        => true,
+			'order_types'         => wc_get_order_types( 'order-count' ),
+			'order_status'        => array( 'completed', 'processing', 'on-hold' )
+		) );
+
+	}
+
 	/**
 	 * Get the legend for the main chart sidebar
 	 *
@@ -27,51 +104,43 @@ class WC_Report_Sales_By_Location extends WC_Admin_Report {
 		$this->location_by   = ( isset($_REQUEST['location_filter']) ? $_REQUEST['location_filter'] : 'shipping' );
 		$this->totals_by     = ( isset($_REQUEST['report_by']) ? $_REQUEST['report_by'] : 'number-orders' );
 
-		add_filter( 'woocommerce_reports_get_order_report_query', array( $this, 'location_report_add_count' ) );
 
-		$location_query = $this->get_order_report_data( array(
-				'data' => array(
-					'_' . $this->location_by . '_country' => array(
-						'type'     => 'meta',
-						'name'     => 'countries_data',
-						'function' => null
-					),
-					'_order_total' => array(
-						'type'     => 'meta',
-						'function' => 'SUM',
-						'name'     => 'total_sales'
-					),
-					'post_date' => array(
-						'type'     => 'post_data',
-						'function' => '',
-						'name'     => 'post_date'
-					),
-				),
-				'filter_range' => true,
-				'group_by' => 'YEAR(posts.post_date), MONTH(posts.post_date), DAY(posts.post_date), meta__' . $this->location_by . '_country.meta_value',
-				'query_type' => 'get_results'
-			) );
+		$data = $this->get_report_data();
+
+		add_filter( 'woocommerce_reports_get_order_report_query', array( $this, 'location_report_add_count' ) );
 
 
 		//Loop through the returned data and set depending on sales or order totals
 		$country_data = array();
 		$export_data = array();
-		foreach ( $location_query as $location_values ) {
 
-			if ( '' == $location_values->countries_data ) {
-				$location_values->countries_data = 'UNDEFINED';
+		if ( 'number-orders' == $this->totals_by ) {
+			foreach ( $data->order_counts as $location_values ) {
+				if ( '' == $location_values->countries_data ) {
+					$location_values->countries_data = 'UNDEFINED';
+				}
+			
+				$country_data[$location_values->countries_data] = ( isset( $country_data[$location_values->countries_data] ) ) ? $location_values->count + $country_data[$location_values->countries_data] : $location_values->count;
+
+				if ( 'UNDEFINED' != $location_values->countries_data ) {
+					$export_data[$location_values->countries_data][] = $location_values;
+				}
 			}
-
-			if ( 'number-orders' == $this->totals_by ) {
-				$country_data[$location_values->countries_data] = ( isset( $country_data[$location_values->countries_data] ) ) ? $location_values->countries_data_count + $country_data[$location_values->countries_data] : $location_values->countries_data_count;
-			} elseif ( 'order-total' == $this->totals_by ) {
+		} elseif ( 'order-total' == $this->totals_by ) {
+			foreach ( $data->orders as $location_values ) {
+	
+				if ( '' == $location_values->countries_data ) {
+					$location_values->countries_data = 'UNDEFINED';
+				}
+					
 				$country_data[$location_values->countries_data] = ( isset( $country_data[$location_values->countries_data] ) ) ? $location_values->total_sales + $country_data[$location_values->countries_data] : $location_values->total_sales;
-			}
-
-			if ( 'UNDEFINED' != $location_values->countries_data ) {
-				$export_data[$location_values->countries_data][] = $location_values;
+	
+				if ( 'UNDEFINED' != $location_values->countries_data ) {
+					$export_data[$location_values->countries_data][] = $location_values;
+				}
 			}
 		}
+
 
 		//Pass the data to the screen.
 		$this->location_data = $country_data;
