@@ -4,7 +4,7 @@ This is a WordPress plugin to extend the functionality of [WooCommerce](http://w
 
 This plugin adds a new section in the WooCommerce Reports -> Orders area called 'Sales by location'.
 
-The report visualizes the customer purchases by location into a Choropleth map to show where your orders are being placed.
+The report visualizes the customer purchases by country location into a Choropleth map to show where your orders are being placed.
 
 * Display by shipping address or billing address
 * Display by number of orders or order amount.

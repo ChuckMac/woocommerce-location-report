@@ -2,7 +2,7 @@
 /**
  * WC_Report_Sales_By_Location
  *
- * @author      ChuckMac (chuck@chuckmac.info)
+ * @author      ChuckMac Development (chuckmacdev.com)
  * @category    Admin
  * @package     WooCommerce/Admin/Reports
  * @version     1.1
@@ -37,59 +37,63 @@ class WC_Report_Sales_By_Location extends WC_Admin_Report {
 
 		$this->report_data = new stdClass;
 
-		$this->report_data->orders = (array) $this->get_order_report_data( array(
-			'data' => array(
-				'_' . $this->location_by . '_country' => array(
-					'type'     => 'meta',
-					'name'     => 'countries_data',
-					'function' => null
+		$this->report_data->orders = (array) $this->get_order_report_data(
+			array(
+				'data' => array(
+					'_' . $this->location_by . '_country' => array(
+						'type'     => 'meta',
+						'name'     => 'countries_data',
+						'function' => null,
+					),
+					'_order_total' => array(
+						'type'     => 'meta',
+						'function' => 'SUM',
+						'name'     => 'total_sales',
+					),
+					'post_date' => array(
+						'type'     => 'post_data',
+						'function' => '',
+						'name'     => 'post_date',
+					),
 				),
-				'_order_total' => array(
-					'type'     => 'meta',
-					'function' => 'SUM',
-					'name'     => 'total_sales'
-				),
-				'post_date' => array(
-					'type'     => 'post_data',
-					'function' => '',
-					'name'     => 'post_date'
-				),
-			),
-			'group_by'            => 'YEAR(posts.post_date), MONTH(posts.post_date), DAY(posts.post_date), meta__' . $this->location_by . '_country.meta_value',
-			'order_by'            => 'post_date ASC',
-			'query_type'          => 'get_results',
-			'filter_range'        => true,
-			'order_types'         => array_merge( array( 'shop_order_refund' ), wc_get_order_types( 'sales-reports' ) ),
-			'order_status'        => array( 'completed', 'processing', 'on-hold' ),
-			'parent_order_status' => array( 'completed', 'processing', 'on-hold' ),
-		) );
-
-		$this->report_data->order_counts = (array) $this->get_order_report_data( array(
-			'data' => array(
-				'_' . $this->location_by . '_country' => array(
-					'type'     => 'meta',
-					'name'     => 'countries_data',
-					'function' => null
-				),
-				'ID' => array(
-					'type'     => 'post_data',
-					'function' => 'COUNT',
-					'name'     => 'count',
-					'distinct' => true,
-				),
-				'post_date' => array(
-					'type'     => 'post_data',
-					'function' => '',
-					'name'     => 'post_date'
+				'group_by'            => 'YEAR(posts.post_date), MONTH(posts.post_date), DAY(posts.post_date), meta__' . $this->location_by . '_country.meta_value',
+				'order_by'            => 'post_date ASC',
+				'query_type'          => 'get_results',
+				'filter_range'        => true,
+				'order_types'         => array_merge( array( 'shop_order_refund' ), wc_get_order_types( 'sales-reports' ) ),
+				'order_status'        => array( 'completed', 'processing', 'on-hold' ),
+				'parent_order_status' => array( 'completed', 'processing', 'on-hold' ),
 				)
-			),
-			'group_by'            => 'YEAR(posts.post_date), MONTH(posts.post_date), DAY(posts.post_date), meta__' . $this->location_by . '_country.meta_value',
-			'order_by'            => 'post_date ASC',
-			'query_type'          => 'get_results',
-			'filter_range'        => true,
-			'order_types'         => wc_get_order_types( 'order-count' ),
-			'order_status'        => array( 'completed', 'processing', 'on-hold' )
-		) );
+		);
+
+		$this->report_data->order_counts = (array) $this->get_order_report_data(
+			array(
+				'data' => array(
+					'_' . $this->location_by . '_country' => array(
+						'type'     => 'meta',
+						'name'     => 'countries_data',
+						'function' => null,
+					),
+					'ID' => array(
+						'type'     => 'post_data',
+						'function' => 'COUNT',
+						'name'     => 'count',
+						'distinct' => true,
+					),
+					'post_date' => array(
+						'type'     => 'post_data',
+						'function' => '',
+						'name'     => 'post_date',
+					),
+				),
+				'group_by'            => 'YEAR(posts.post_date), MONTH(posts.post_date), DAY(posts.post_date), meta__' . $this->location_by . '_country.meta_value',
+				'order_by'            => 'post_date ASC',
+				'query_type'          => 'get_results',
+				'filter_range'        => true,
+				'order_types'         => wc_get_order_types( 'order-count' ),
+				'order_status'        => array( 'completed', 'processing', 'on-hold' ),
+			)
+		);
 
 	}
 
@@ -101,14 +105,12 @@ class WC_Report_Sales_By_Location extends WC_Admin_Report {
 	 */
 	public function get_chart_legend() {
 
-		$this->location_by   = ( isset($_REQUEST['location_filter']) ? $_REQUEST['location_filter'] : 'shipping' );
-		$this->totals_by     = ( isset($_REQUEST['report_by']) ? $_REQUEST['report_by'] : 'number-orders' );
-
+		$this->location_by   = ( isset( $_REQUEST['location_filter'] ) ? $_REQUEST['location_filter'] : 'shipping' );
+		$this->totals_by     = ( isset( $_REQUEST['report_by'] ) ? $_REQUEST['report_by'] : 'number-orders' );
 
 		$data = $this->get_report_data();
 
 		add_filter( 'woocommerce_reports_get_order_report_query', array( $this, 'location_report_add_count' ) );
-
 
 		//Loop through the returned data and set depending on sales or order totals
 		$country_data = array();
@@ -119,24 +121,24 @@ class WC_Report_Sales_By_Location extends WC_Admin_Report {
 				if ( '' == $location_values->countries_data ) {
 					$location_values->countries_data = 'UNDEFINED';
 				}
-			
-				$country_data[$location_values->countries_data] = ( isset( $country_data[$location_values->countries_data] ) ) ? $location_values->count + $country_data[$location_values->countries_data] : $location_values->count;
 
-				$export_data[$location_values->countries_data][] = $location_values;
+				$country_data[ $location_values->countries_data ] = ( isset( $country_data[ $location_values->countries_data ] ) ) ? $location_values->count + $country_data[ $location_values->countries_data ] : $location_values->count;
+
+				$export_data[ $location_values->countries_data ][] = $location_values;
 			}
 
 			$placeholder = __( 'This is the count of orders during this period.', 'woocommerce-location-report' );
 
 		} elseif ( 'order-total' == $this->totals_by ) {
 			foreach ( $data->orders as $location_values ) {
-	
+
 				if ( '' == $location_values->countries_data ) {
 					$location_values->countries_data = 'UNDEFINED';
 				}
-					
-				$country_data[$location_values->countries_data] = ( isset( $country_data[$location_values->countries_data] ) ) ? $location_values->total_sales + $country_data[$location_values->countries_data] : $location_values->total_sales;
-	
-				$export_data[$location_values->countries_data][] = $location_values;
+
+				$country_data[ $location_values->countries_data ] = ( isset( $country_data[ $location_values->countries_data ] ) ) ? $location_values->total_sales + $country_data[ $location_values->countries_data ] : $location_values->total_sales;
+
+				$export_data[ $location_values->countries_data ][] = $location_values;
 			}
 
 			$placeholder = __( 'This is the sum of the order totals after any refunds and including shipping and taxes.', 'woocommerce-location-report' );
@@ -145,16 +147,15 @@ class WC_Report_Sales_By_Location extends WC_Admin_Report {
 
 		//Pass the data to the screen.
 		$this->location_data = $country_data;
-		wp_localize_script('jvectormap', 'map_data', $this->location_data);
-
+		wp_localize_script( 'jvectormap', 'map_data', $this->location_data );
 
 		//If we are using price, then create another set of data with the price set (map does not like adding with price)
 		if ( 'order-total' == $this->totals_by ) {
 			$sales_data = $this->location_data;
-			array_walk($sales_data, function(&$value, $index){
-				$value = strip_tags( wc_price( $value ));
-			});
-			wp_localize_script('jvectormap', 'map_price_data', $sales_data);
+			array_walk( $sales_data, function( &$value, $index ) {
+				$value = strip_tags( wc_price( $value ) );
+			} );
+			wp_localize_script( 'jvectormap', 'map_price_data', $sales_data );
 		}
 
 		$legend = array();
@@ -169,31 +170,29 @@ class WC_Report_Sales_By_Location extends WC_Admin_Report {
 			'title' => sprintf( __( '%s orders in this period', 'woocommerce-location-report' ), '<strong>' . $total . '</strong>' ),
 			'placeholder' => $placeholder,
 			'color' => $this->chart_colours['order_total'],
-			'highlight_series' => 1
+			'highlight_series' => 1,
 		);
 
 		$legend[] = array(
 			'title' => sprintf( __( '%s countries in this period', 'woocommerce-location-report' ), '<strong>' . ( isset( $country_data['UNDEFINED'] ) ? count( $country_data ) - 1 :count( $country_data ) ) . '</strong>' ),
 			'placeholder' => __( 'This is the total number of countries represented in this report.', 'woocommerce-location-report' ),
 			'color' => $this->chart_colours['individual_total'],
-			'highlight_series' => 2
+			'highlight_series' => 2,
 		);
 
 		/* Export Code */
 		$export_array = array();
 		$report_type = ( 'number-orders' == $this->totals_by ) ? 'count' : 'total_sales';
 
-		foreach ($export_data as $country => $data) {
-
+		foreach ( $export_data as $country => $data ) {
 			$export_prep = $this->prepare_chart_data( $data, 'post_date', $report_type, $this->chart_interval, $this->start_date, $this->chart_groupby );
-
-			$export_array[$country] = array_values( $export_prep );
+			$export_array[ $country ] = array_values( $export_prep );
 		}
 
 		// Move undefined to the end of the data
 		if ( isset( $export_array['UNDEFINED'] ) ) {
 			$temp = $export_array['UNDEFINED'];
-			unset($export_array['UNDEFINED']);
+			unset( $export_array['UNDEFINED'] );
 			$export_array['UNDEFINED'] = $temp;
 		}
 
@@ -244,12 +243,12 @@ class WC_Report_Sales_By_Location extends WC_Admin_Report {
 
 		$widgets[] = array(
 			'title'    => __( 'Showing reports for:', 'woocommerce-location-report' ),
-			'callback' => array( $this, 'current_filters' )
+			'callback' => array( $this, 'current_filters' ),
 		);
 
 		$widgets[] = array(
 			'title'    => '',
-			'callback' => array( $this, 'location_widget' )
+			'callback' => array( $this, 'location_widget' ),
 		);
 
 		return $widgets;
@@ -277,34 +276,40 @@ class WC_Report_Sales_By_Location extends WC_Admin_Report {
 		<h4 class="section_title"><span><?php _e( 'Report By', 'woocommerce' ); ?></span></h4>
 		<div class="section">
 			<table cellspacing="0">
-				<tr class="active">
-					<td class="count"></td>
-					<td class="name"><a href="<?php echo add_query_arg( 'report_by', 'number-orders' ); ?>"><?php _e( 'Number of orders', 'woocommerce-location-report' ); ?></a></td>
-					<td class="sparkline"></td>
-				</tr>
-				<tr class="active">
-					<td class="count"></td>
-					<td class="name"><a href="<?php echo add_query_arg( 'report_by', 'order-total' ); ?>"><?php _e( 'Order total', 'woocommerce-location-report' ); ?></a></td>
-					<td class="sparkline"></td>
-				</tr>
+				<?php echo $this->generate_widget_line( 'report_by', 'number-orders', __( 'Number of orders', 'woocommerce-location-report' ), $this->totals_by ); ?>
+				<?php echo $this->generate_widget_line( 'report_by', 'order-total', __( 'Order total', 'woocommerce-location-report' ), $this->totals_by ); ?>
 			</table>
 		</div>
 		<h4 class="section_title"><span><?php _e( 'Location Filter', 'woocommerce' ); ?></span></h4>
 		<div class="section">
 			<table cellspacing="0">
-				<tr class="active">
-					<td class="count"></td>
-					<td class="name"><a href="<?php echo add_query_arg( 'location_filter', 'shipping' ); ?>"><?php _e( 'Shipping Address', 'woocommerce-location-report' ); ?></a></td>
-					<td class="sparkline"></td>
-				</tr>
-				<tr class="active">
-					<td class="count"></td>
-					<td class="name"><a href="<?php echo add_query_arg( 'location_filter', 'billing' ); ?>"><?php _e( 'Billing Address', 'woocommerce-location-report' ); ?></a></td>
-					<td class="sparkline"></td>
-				</tr>
+				<?php echo $this->generate_widget_line( 'location_filter', 'shipping', __( 'Shipping Address', 'woocommerce-location-report' ), $this->location_by ); ?>
+				<?php echo $this->generate_widget_line( 'location_filter', 'billing', __( 'Billing Address', 'woocommerce-location-report' ), $this->location_by ); ?>
 			</table>
 		</div>
+
 		<?php
+		do_action( 'wclr_after_filter_widgets' );
+
+	}
+
+	/**
+	 * Widget : Report filter options
+	 *
+	 * @since 1.0
+	 */
+	public function generate_widget_line( $query_type, $query_value, $query_name, $current_val ) {
+
+		$return = '<tr class="active"><td class="count"></td><td class="name">';
+		if ( $query_value != $current_val ) {
+			$return .= '<a href="' . add_query_arg( $query_type, $query_value ) . '">' . $query_name . '</a>';
+		} else {
+			$return .= $query_name;
+		}
+		$return .= '</td><td class="sparkline"></td></tr>';
+
+		return $return;
+
 	}
 
 	/**
@@ -318,12 +323,12 @@ class WC_Report_Sales_By_Location extends WC_Admin_Report {
 			'year'         => __( 'Year', 'woocommerce' ),
 			'last_month'   => __( 'Last Month', 'woocommerce' ),
 			'month'        => __( 'This Month', 'woocommerce' ),
-			'7day'         => __( 'Last 7 Days', 'woocommerce' )
+			'7day'         => __( 'Last 7 Days', 'woocommerce' ),
 		);
 
 		$this->chart_colours = array(
 			'order_total' 		=> '#3498db',
-			'individual_total'  => '#75b9e7'
+			'individual_total'  => '#75b9e7',
 		);
 
 		$current_range = ! empty( $_GET['range'] ) ? sanitize_text_field( $_GET['range'] ) : '7day';
@@ -334,7 +339,7 @@ class WC_Report_Sales_By_Location extends WC_Admin_Report {
 
 		$this->calculate_current_range( $current_range );
 
-		include( WC()->plugin_path() . '/includes/admin/views/html-report-by-date.php');
+		include( WC()->plugin_path() . '/includes/admin/views/html-report-by-date.php' );
 
 	}
 
@@ -348,7 +353,7 @@ class WC_Report_Sales_By_Location extends WC_Admin_Report {
 		?>
 		<a
 			href="#"
-			download="report-<?php echo esc_attr( $current_range ); ?>-<?php echo date_i18n( 'Y-m-d', current_time('timestamp') ); ?>.csv"
+			download="report-<?php echo esc_attr( $current_range ); ?>-<?php echo date_i18n( 'Y-m-d', current_time( 'timestamp' ) ); ?>.csv"
 			class="export_csv"
 			data-export="chart"
 			data-xaxes="<?php _e( 'Date', 'woocommerce' ); ?>"
@@ -372,18 +377,18 @@ class WC_Report_Sales_By_Location extends WC_Admin_Report {
 		<script type="text/javascript">
 			jQuery(function($){
 				$('#world-map').vectorMap( {
-					map: 'world_mill_en',
+					map: 'world_mill',
 					backgroundColor: "transparent",
 					regionStyle: {
 						initial:  {	fill: "#d2d2d2"}
 					},
 					onRegionTipShow: function(e, el, code) {
 						<?php
-						if ( isset($_REQUEST['report_by']) && 'order-total' == $_REQUEST['report_by'] ) { // show formatted price for order totals ?>
+						if ( isset( $_REQUEST['report_by'] ) && 'order-total' == $_REQUEST['report_by'] ) { // show formatted price for order totals ?>
 							el.html('<strong>'+(map_price_data[code] ? map_price_data[code] : 0)+' - </strong> '+el.html());
 						<?php
 						} else { ?>
-							el.html('<strong>'+(map_data[code] ? map_data[code] : 0)+' <?php _e('orders', 'woocommerce-location-report'); ?> - '+'</strong> '+el.html());
+							el.html('<strong>'+(map_data[code] ? map_data[code] : 0)+' <?php _e( 'orders', 'woocommerce-location-report' ); ?> - '+'</strong> '+el.html());
 						<?php
 						} ?>
 					},
@@ -409,9 +414,8 @@ class WC_Report_Sales_By_Location extends WC_Admin_Report {
 	 */
 	public function location_report_add_count( $query ) {
 
-		$sql = preg_replace('/^SELECT /', 'SELECT COUNT(meta__' . $this->location_by . '_country.meta_value) as countries_data_count, ', $query);
+		$sql = preg_replace( '/^SELECT /', 'SELECT COUNT(meta__' . $this->location_by . '_country.meta_value) as countries_data_count, ', $query );
 		return $sql;
 
 	}
-
 }
