@@ -377,7 +377,7 @@ class WC_Report_Sales_By_Location extends WC_Admin_Report {
 		<script type="text/javascript">
 			jQuery(function($){
 				$('#world-map').vectorMap( {
-					map: 'world_mill_en',
+					map: 'world_mill',
 					backgroundColor: "transparent",
 					regionStyle: {
 						initial:  {	fill: "#d2d2d2"}
