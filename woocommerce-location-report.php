@@ -1,10 +1,10 @@
 <?php
 /**
  * Plugin Name: WooCommerce Sales By Location Report
- * Plugin URI: http://www.chuckmac.info
+ * Plugin URI: http://chuckmacdev.com
  * Description: WooCommerce report to visualize sales by location.
- * Author: Chuck Mac
- * Author URI: http://www.chuckmac.info
+ * Author: ChuckMac Development
+ * Author URI: http://chuckmacdev.com
  * Version: 1.2
  * Text Domain: wc_location_report
  * Domain Path: /languages/
@@ -21,11 +21,13 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Exit if accessed directly
+}
 
 // Check if WooCommerce is active
 if ( ! in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
-    return;
+	return;
 }
 
 
@@ -52,7 +54,7 @@ class WC_Location_Report {
 	/** @var string the plugin file */
 	public static $plugin_dir;
 
-	
+
 	/**
 	 * Initializes the plugin
 	 *
@@ -80,7 +82,7 @@ class WC_Location_Report {
 
 
 	/**
-	 * Add any location report javascript & css to the admin pages.  Only 
+	 * Add any location report javascript & css to the admin pages.  Only
 	 * add it to our specific report areas.
 	 *
 	 * @since 1.0
@@ -90,7 +92,7 @@ class WC_Location_Report {
 		$wc_screen_id = sanitize_title( __( 'WooCommerce', 'woocommerce' ) );
 		$screen = get_current_screen();
 
-		if ( in_array( $screen->id, apply_filters( 'woocommerce_geo_reports_screen_ids', array( $wc_screen_id . '_page_wc-reports' ) ) ) && isset( $_REQUEST['report'] ) && in_array($_REQUEST['report'], apply_filters( 'woocommerce_geo_reports_report_ids', array( 'sales_by_location' ) )) ) {
+		if ( in_array( $screen->id, apply_filters( 'woocommerce_geo_reports_screen_ids', array( $wc_screen_id . '_page_wc-reports' ) ) ) && isset( $_REQUEST['report'] ) && in_array( $_REQUEST['report'], apply_filters( 'woocommerce_geo_reports_report_ids', array( 'sales_by_location' ) ) ) ) {
 
 			//jVector includes - needs to be done in the footer so we can localize data as part of the report generation
 			wp_enqueue_script( 'jvectormap', plugins_url( '/lib/jquery-jvectormap-2.0.2.min.js', self::$plugin_file ), array( 'jquery' ), self::$version, true );
@@ -111,17 +113,17 @@ class WC_Location_Report {
 	 * @return array Array of All Report types & their labels, including the 'Sales by location' report.
 	 * @since 1.0
 	 */
-	public static function initialize_location_admin_report ( $report ) {
+	public static function initialize_location_admin_report( $report ) {
 
-		$report['orders']['reports']['sales_by_location'] = array (
+		$report['orders']['reports']['sales_by_location'] = array(
 															'title'       => __( 'Sales by location', 'woocommerce-location-report' ),
 															'description' => '',
 															'hide_title'  => true,
-															'callback'    => array( 'WC_Admin_Reports', 'get_report' )
+															'callback'    => array( 'WC_Admin_Reports', 'get_report' ),
 															);
 
 		return $report;
-		
+
 	}
 
 
@@ -137,7 +139,7 @@ class WC_Location_Report {
 		if ( 'WC_Report_sales_by_location' == $class ) {
 			$report_path = self::$plugin_dir . '/classes/class-wc-report-' . $name . '.php';
 		}
-		
+
 		return $report_path;
 
 	}
@@ -148,12 +150,11 @@ class WC_Location_Report {
 	 *
 	 * @since 1.0
 	 */
-	public static function load_plugin_textdomain( ) {
+	public static function load_plugin_textdomain() {
 
 		load_plugin_textdomain( 'woocommerce-location-report', false, basename( self::$plugin_dir ) . '/languages' );
 
 	}
-
 } // end \WC_Location_Report class
 
 
