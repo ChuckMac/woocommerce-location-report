@@ -2,12 +2,12 @@
 Contributors: chuckmac
 Tags: woocommerce, extension, reporting, analytics
 Requires at least: 3.8
-Tested up to: 4.2
+Tested up to: 4.4.1
 Stable tag: 1.0
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
-WooCommerce reporting extension to elegantly display customer orders by location.
+WooCommerce reporting extension to elegantly display customer orders by country location.
 
 == Description ==
 
@@ -27,7 +27,7 @@ Developers can contribute to the source code on the [GitHub Repository](https://
 
 = The sales report says I have more orders in the time period than the location report shows... why? =
 
-The location map only displays orders that have a recognizable address associated with the order.  For example, if there is no shipping address for the order then the map will not display the order if you are on the Shipping Address filter. 
+The location map only displays orders that have a recognizable address associated with the order.  For example, if there is no shipping address for the order then the map will not display the order if you are on the Shipping Address filter.
 
 
 == Installation ==
@@ -51,14 +51,20 @@ The location map only displays orders that have a recognizable address associate
 
 == Changelog ==
 
+= 1.3 - 2016.01.20 =
+* Enhancement - Update to jVectorMap 2.0.3
+* Enhancement - Compatability tested with WordPress 4.4.1 and WooCommerce 2.5
+* Fix - applied WordPress-Core coding standards
+
+
 = 1.2 - 2015.06.29 =
 * Enhancement - Update to jVectorMap 2.0.2
 * Fix - Fix order total reporting issue with WooCommerce 2.3
 
 = 1.1.1 - 2015.01.11 =
-* Fix - add .js suffix to world map 
+* Fix - add .js suffix to world map
 
-= 1.1 - 2014.10.20 = 
+= 1.1 - 2014.10.20 =
 * Fix - WooCommerce active check
 * Tweak - yoda coding style
 

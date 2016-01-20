@@ -5,7 +5,7 @@
  * Description: WooCommerce report to visualize sales by location.
  * Author: ChuckMac Development
  * Author URI: http://chuckmacdev.com
- * Version: 1.2
+ * Version: 1.3
  * Text Domain: wc_location_report
  * Domain Path: /languages/
  *
