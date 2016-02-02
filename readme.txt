@@ -51,6 +51,9 @@ The location map only displays orders that have a recognizable address associate
 
 == Changelog ==
 
+= 1.3.1 - 2016.02.02 =
+* Fix svn deployment issue of updated js/css libraries
+
 = 1.3 - 2016.01.20 =
 * Enhancement - Update to jVectorMap 2.0.3
 * Enhancement - Compatability tested with WordPress 4.4.1 and WooCommerce 2.5
