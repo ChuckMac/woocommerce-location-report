@@ -2,7 +2,7 @@
 Contributors: chuckmac
 Tags: woocommerce, extension, reporting, analytics
 Requires at least: 3.8
-Tested up to: 4.4.1
+Tested up to: 4.8.1
 Stable tag: 1.0
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -50,6 +50,9 @@ The location map only displays orders that have a recognizable address associate
 
 
 == Changelog ==
+
+= 1.3.2 - 2017.08.21 =
+* Fix Non-static method warning
 
 = 1.3.1 - 2016.02.02 =
 * Fix svn deployment issue of updated js/css libraries
